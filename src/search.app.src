@@ -1,0 +1,14 @@
+{application, search,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+		  cowboy
+                 ]},
+  {modules, []},
+  {mod, { search_app, []}},
+  {env, []}
+ ]}.

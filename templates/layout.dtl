@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Search - View results</title>
+    
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/normalize.min.css" rel="stylesheet" type="text/css" />
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/css/foundation.min.css" rel="stylesheet" type="text/css" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/js/vendor/modernizr.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/js/vendor/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/foundation/5.4.7/js/foundation.min.js"></script>
+    <script src="http://www.the-art-of-web.com/hilitor.js"></script>
+    <script src="http://jedfoster.com/js/readmore.min.js"></script>
+
+    <script type="text/javascript">
+
+     $( document ).ready(function() {
+       var myHilitor = new Hilitor();
+       myHilitor.apply("{{ the_query }}");
+       $('article').readmore();
+
+     });
+     
+    </script>
+  </head>
+  <body>
+    <a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:100;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+    <div class="row">
+      <div class="large-6 columns">
+	<h1>Search Demo</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-9 columns">
+        <div class="panel callout radius">
+          <p>
+            This demo page allows you to query ~130K articles from the <a href="https://archive.org/details/stackexchange">Stack Exchange / Stack overflow Data dump</a> using an Erlang implementation of the WAND / max_score evaluation stategy for Top-K Queries as outlined in <a href="http://fontoura.org/papers/vldb2011.pdf">this paper</a>. It was fun to translate this <a href="https://github.com/ashaegupta/InvIndexSearch/blob/master/invindexsimsearch/src/com/invIndexSimSearch/DAAT.java">Java DAAT</a> implementation to a relative speedy Erlang implementation with immutable data structures. 
+          </p>
+          <p>
+            <a href="mailto:ward@wardbekker.com">Feedback is appreciated!</a> | <a href="https://twitter.com/wardbekker">Follow me on Twitter</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">    
+      <div class="large-9 columns">
+        <form method="get">
+          <div class="row collapse">
+            <div class="small-2 medium-2 large-2 columns">
+              <label for="q" class="prefix">Query</label>
+            </div>
+            <div class="small-7 medium-7 large-7 columns">
+              <input type="text" placeholder="type search query" id="q" name="q" value="{{ the_query }}" />
+            </div>
+            <div class="small-3 medium-3 large-3 columns">
+              <button type="submit" class="postfix">Submit</button>
+            </div>
+          </div>
+        </form>
+
+        <hr />
+        {% if total_results %}
+          <h3>Top {{  document_relevance_scores|length }} results of {{ total_results }} total hits in {{ execution_milliseconds }} ms for {{ the_query }}:</h3>
+          <ol>
+            {% for document_relevance_score in document_relevance_scores %}
+              <li>
+                <article>
+                  <strong>doc_id: {{ document_relevance_score.document_id }}</strong><br/>
+                  <strong>relevance score: {{ document_relevance_score.relevance_score }}</strong><br/>
+                  <p>
+                  {% for fv in  document_relevance_score.field_value %}
+                    {{ fv.field_name }} : {{ fv.value|safe }}<br />
+            {% endfor %}
+                  </p>
+                </article>
+                <br />
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+	
+      </div>         
+    </div>    
+    <footer class="row">
+      <div class="large-12 columns">
+	<hr/>
+	<div class="row">
+          <div class="large-6 columns">
+            <p>© <a href="http://wardbekker.com">Ward Bekker</a></p>
+          </div>
+	</div>
+      </div> 
+    </footer>
+  </body>
+</html>

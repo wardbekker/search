@@ -1,0 +1,3 @@
+(projmake
+ :name  "Search"
+ :shell "make")
