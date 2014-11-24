@@ -35,7 +35,9 @@
         <div class="panel callout radius">
           <p>
             This demo page allows you to query ~130K articles from the <a href="https://archive.org/details/stackexchange">Stack Exchange / Stack overflow Data dump</a> using an Erlang implementation of the WAND / max_score evaluation stategy for Top-K Queries as outlined in <a href="http://fontoura.org/papers/vldb2011.pdf">this paper</a>. It was fun to translate this <a href="https://github.com/ashaegupta/InvIndexSearch/blob/master/invindexsimsearch/src/com/invIndexSimSearch/DAAT.java">Java DAAT</a> implementation to a relative speedy Erlang implementation with immutable data structures. This demo is hosted on a <a href="https://www.digitalocean.com/?refcode=0d0404fa1c5c">1GB Single Core server from Digital Ocean</a>.
-
+          </p>
+          <p>
+            Some tips for searching, as I didn't focus on the tokenizer: <a href="/?q=F%23">F#</a> doesn't give any result, but <a href="/?q=fsharp">fsharp</a> does. The demo does contain stemming, so <a href="/?q=developers">`developers` also returns hits for `developer`</a>.
           </p>
           <p>
             <a href="mailto:ward@wardbekker.com">Feedback is appreciated!</a> | <a href="https://twitter.com/wardbekker">Follow me on Twitter</a>
@@ -48,7 +50,7 @@
         <form method="get">
           <div class="row collapse">
             <div class="small-2 medium-2 large-2 columns">
-              <label for="q" class="prefix">Query</label>
+              <label for="q" class="prefix">Search terms</label>
             </div>
             <div class="small-7 medium-7 large-7 columns">
               <input type="text" placeholder="type search query" id="q" name="q" value="{{ the_query }}" />
@@ -78,8 +80,9 @@
               </li>
             {% endfor %}
           </ol>
+        {% else %}
+          <h3>Ooops, no results. That's embrassing. </h3>
         {% endif %}
-	
       </div>         
     </div>    
     <footer class="row">
