@@ -34,7 +34,8 @@
       <div class="large-9 columns">
         <div class="panel callout radius">
           <p>
-            This demo page allows you to query ~130K articles from the <a href="https://archive.org/details/stackexchange">Stack Exchange / Stack overflow Data dump</a> using an Erlang implementation of the WAND / max_score evaluation stategy for Top-K Queries as outlined in <a href="http://fontoura.org/papers/vldb2011.pdf">this paper</a>. It was fun to translate this <a href="https://github.com/ashaegupta/InvIndexSearch/blob/master/invindexsimsearch/src/com/invIndexSimSearch/DAAT.java">Java DAAT</a> implementation to a relative speedy Erlang implementation with immutable data structures. 
+            This demo page allows you to query ~130K articles from the <a href="https://archive.org/details/stackexchange">Stack Exchange / Stack overflow Data dump</a> using an Erlang implementation of the WAND / max_score evaluation stategy for Top-K Queries as outlined in <a href="http://fontoura.org/papers/vldb2011.pdf">this paper</a>. It was fun to translate this <a href="https://github.com/ashaegupta/InvIndexSearch/blob/master/invindexsimsearch/src/com/invIndexSimSearch/DAAT.java">Java DAAT</a> implementation to a relative speedy Erlang implementation with immutable data structures. This demo is hosted on a [1GB Single Core server from Digital Ocean](https://www.digitalocean.com/?refcode=0d0404fa1c5c).
+
           </p>
           <p>
             <a href="mailto:ward@wardbekker.com">Feedback is appreciated!</a> | <a href="https://twitter.com/wardbekker">Follow me on Twitter</a>
