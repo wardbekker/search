@@ -11,7 +11,7 @@ This demo application allows you to query ~130K articles from the Stack Exchange
 
 # Relevant links
 
-- [Wand / max_score Paper](http://fontoura.org/papers/vldb2011.pdf)
+- [WAND / max_score Paper](http://fontoura.org/papers/vldb2011.pdf)
 - [Stack Exchange data dump](https://archive.org/details/stackexchange)
 - [Java DAAT example implementation](https://github.com/ashaegupta/InvIndexSearch/blob/master/invindexsimsearch/src/com/invIndexSimSearch/DAAT.java)
 
