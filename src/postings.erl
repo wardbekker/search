@@ -8,6 +8,8 @@
 current_doc(#postings{ skip_nodes = [#skip_node{ docs = [CurrentDocTuple | _] } | _]}) ->
     CurrentDocTuple.
 
+goto(_GotoDocId, #postings{ skip_nodes = [] }) ->
+    {error, no_nodes_left};
 goto(GotoDocId, #postings{ skip_nodes = Nodes } = Posting) ->
     case goto_node(GotoDocId, Nodes) of
         {error, Reason} ->
@@ -15,8 +17,13 @@ goto(GotoDocId, #postings{ skip_nodes = Nodes } = Posting) ->
          NewNodes ->
             [ SkipNode | RestNodes ] = NewNodes,
             case goto_doc(GotoDocId, SkipNode#skip_node.docs) of
-                {error, Reason} ->
-                    {error, Reason};
+                {error, _Reason} ->
+                    goto(
+                      GotoDocId, 
+                      Posting#postings {
+                        skip_nodes = RestNodes,
+                        head_doc_id = undefined
+                       });
                 NewDocs ->
                     [ {DocId, _} | _] = NewDocs,
                     Posting#postings{
@@ -34,7 +41,7 @@ goto_node(GotoDocId, [#skip_node { start_doc_id = StartDocId } | _] = SkipNodes)
     SkipNodes;
 goto_node(GotoDocId, [_ | RestSkipNodes]) ->
     %% doc id is more than current node start doc_id + 1000, advance skipnode
-    goto(GotoDocId, RestSkipNodes).
+    goto_node(GotoDocId, RestSkipNodes).
 
 
 goto_doc(_GotoDocId, []) ->
