@@ -83,8 +83,8 @@ terms_query(Terms) ->
     TopK = 30,
     TermsStemmed = [ eporter:stem(Term) || Term <- Terms],
     Postings = search_index:get_postings(TermsStemmed),
-    TotalResults = lists:sum(lists:map(fun(#postings{ docs = Docs }) ->
-                                                    length(Docs)
+    TotalResults = lists:sum(lists:map(fun(#postings{ total_docs = TotalDocs }) ->
+                                                    TotalDocs
                                             end,
                                             Postings)),
     Results = search_daat:get_top(TopK, Postings),

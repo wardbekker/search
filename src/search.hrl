@@ -21,9 +21,11 @@
 %% THE SOFTWARE.
 
 -define(P(Var), io:format("Debug var: ~p~n", [Var])).
+-define(SKIP_INTERVAL, 1000).
 
 -record(heap, { heap :: list({integer(), integer()}), min_score :: integer()}).
--record(postings, { term :: binary(), head_doc_id :: integer(), docs :: list({integer(),integer()}), max_score :: integer(), weight :: float()}). 
+-record(skip_node, { start_doc_id :: integer(), docs :: list({integer(), integer()}) }).
+-record(postings, { term :: binary(), head_doc_id :: integer(), total_docs :: integer(), skip_nodes :: list(#skip_node{}), max_score :: integer(), weight :: float()}). 
 -record(term_document_field_frequency, { key, term :: binary(), document_id :: binary(), field_name :: binary(), frequency :: integer()}).
 -record(document_field_value, { key, document_id :: binary(), field_name :: binary(), value :: binary() }).
 -record(field_value, { field_name :: binary(), value :: binary() }).

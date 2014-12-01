@@ -35,7 +35,7 @@
 -define(CHUNK_SIZE, 5000).
 
 stack_exchange_import() ->
-    {ok, Data} = file:read_file("Posts.xml"),
+    {ok, Data} = file:read_file("Posts2.xml"),
 
     %% posttypes 1 = Stack exchange Questions
     {match, Documents1} = re:run(Data, "row Id=\"(.*?)\" PostTypeId=\"(.*?)\" .*? Body=\"(.*?)\" .*? Title=\"(.*?)\".*?Tags=\"(.*?)\"", [global, {capture, all_but_first, list}]),
@@ -110,13 +110,32 @@ to_postings(TermDocumentFieldFrequencies,  TotalNumberOfDocuments) ->
     [{HeadDocId, _} | _] = SortedDocs,
     #postings{
        term = Term,
-       docs = SortedDocs,
+       skip_nodes = lists:reverse(to_skip_nodes(SortedDocs)),
        max_score = MaxScore,
        head_doc_id = HeadDocId,
+       total_docs = length(SortedDocs),
        weight = math:log(TotalNumberOfDocuments / length(SortedDocs))
       }.
 
+to_skip_nodes([HeadDoc | RestDocs]) ->
+    {StartDocId, _} = HeadDoc, 
+    to_skip_nodes(RestDocs, #skip_node{ start_doc_id = StartDocId, docs = [HeadDoc]}, []).
 
+to_skip_nodes([], CurrentSkipNode, SkipNodes) ->
+    %% no docs left, return skiplist\
+    CurrentSkipNode1 = CurrentSkipNode#skip_node{ docs = lists:reverse(CurrentSkipNode#skip_node.docs)}, 
+    [CurrentSkipNode1 | SkipNodes];
+to_skip_nodes([HeadDoc | RestDocs], CurrentSkipNode, SkipNodes) ->
+    {DocId, _} = HeadDoc, 
+    case DocId > CurrentSkipNode#skip_node.start_doc_id + ?SKIP_INTERVAL of
+        true ->
+            %% new skip node
+            CurrentSkipNode1 = CurrentSkipNode#skip_node{ docs = lists:reverse(CurrentSkipNode#skip_node.docs)}, 
+            to_skip_nodes(RestDocs, #skip_node{ start_doc_id = DocId, docs = [HeadDoc]}, [CurrentSkipNode1 | SkipNodes]);
+        false ->
+            %% append to current skip node
+            to_skip_nodes(RestDocs, CurrentSkipNode#skip_node{ docs = [HeadDoc | CurrentSkipNode#skip_node.docs]}, SkipNodes)
+    end.
 
 
 %% Example JSON doc: {

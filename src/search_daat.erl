@@ -90,10 +90,11 @@ heap_insert(Heap, MaxHeapSize, DocId, FullScore) ->
                
 -spec full_score(integer(), list(#postings{})) -> integer().     
 full_score(DocId, Postings) ->
-    lists:foldl(fun(#postings{ weight = Weight, docs = [{CurrentDocId, Score} | _]}, Acc) ->
+    lists:foldl(fun(Posting, Acc) ->
+                    {CurrentDocId, CurrentScore} = postings:current_doc(Posting),
                       case CurrentDocId == DocId of
                           true ->
-                              Acc + Score * Weight;
+                              Acc + CurrentScore * Posting#postings.weight;
                           false ->
                               Acc
                       end
@@ -111,7 +112,7 @@ next(PostingsUnsorted, CurrentDocId, UpperBound) ->
     case find_pivot(Postings, UpperBound) of
         {error, not_found} -> {error, not_found};
         Pivot -> 
-            [{PivotDocId, PivotDocScore} | _] = Pivot#postings.docs,
+            {PivotDocId, PivotDocScore} = postings:current_doc(Pivot),
             [HeadPosting | _Rest] = Postings,
             HeadPostingDocId  = HeadPosting#postings.head_doc_id,
             next(HeadPostingDocId, PivotDocId, PivotDocScore, Postings, CurrentDocId, UpperBound)
@@ -132,31 +133,12 @@ next(_HeadPostingDocId, PivotDocId, _PivotDocScore, Postings, CurrentDocId, Uppe
     next(NewPostings, CurrentDocId, UpperBound).
 
 -spec skip_to(list(#postings{}), integer()) -> list(#postings{}).                                 
-skip_to([#postings{ docs = [_ | Docs] } = HeadPosting | Postings], SkipToDocId) ->
-    case skip_to(Docs, HeadPosting, SkipToDocId, 0) of
-        {error, no_docs_left} -> Postings; %% remove head
+skip_to([HeadPosting | Postings], SkipToDocId) ->
+    case postings:goto(SkipToDocId, HeadPosting) of
+        {error, _} -> Postings; %% remove head
         NewHeadPosting -> 
             [NewHeadPosting | Postings]
     end.
-
--spec skip_to(
-        list({integer(),integer()}),
-        list(#postings{}),
-        integer(),
-        integer()
-       ) -> {error, no_docs_left} | #postings{}. 
-skip_to([], _Posting, _SkipToDocId, _SkipCountAcc) ->
-    {error, no_docs_left};
-skip_to([{DocId, Score} | NewDocs], Posting, SkipToDocId, _SkipCountAcc) when DocId >= SkipToDocId->
-    #postings{ 
-       term = Posting#postings.term,
-       docs = [{DocId, Score} | NewDocs], 
-       max_score = Posting#postings.max_score, 
-       head_doc_id = DocId,
-       weight = Posting#postings.weight
-      };
-skip_to([_ | NewDocs], Posting, SkipToDocId, SkipCountAcc) ->
-    skip_to(NewDocs, Posting, SkipToDocId, SkipCountAcc + 1).
 
 -spec find_pivot(
         list(#postings{}),
