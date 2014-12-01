@@ -4,7 +4,6 @@
 
 -export([current_doc/1, goto/2]).
 
-%% TODO depleted postings case.
 current_doc(#postings{ skip_nodes = [#skip_node{ docs = [CurrentDocTuple | _] } | _]}) ->
     CurrentDocTuple.
 
