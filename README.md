@@ -2,7 +2,7 @@
 
 This demo application allows you to query ~130K articles from the Stack Exchange / Stack overflow Data dump using an Erlang implementation of the WAND / max_score evaluation stategy for Top-K Queries as outlined in this paper. It was fun to translate this Java DAAT implementation to a relative speedy Erlang implementation with immutable data structures.
 
-[Try it out the demo here](http://search.wardbekker.com:8080). It's hosted on a [1GB Single Core server from Digital Ocean](https://www.digitalocean.com/?refcode=0d0404fa1c5c).
+[Try it out the demo here](http://search.wardbekker.com:30001). It's hosted on a [1GB Single Core server from Digital Ocean](https://www.digitalocean.com/?refcode=0d0404fa1c5c).
 
 # Demo Quickstart
 
