@@ -120,7 +120,7 @@ next(PostingsUnsorted, CurrentDocId, UpperBound) ->
 
 next(_HeadPostingDocId, PivotDocId, _PivotDocScore, Postings, CurrentDocId, UpperBound) 
   when PivotDocId =< CurrentDocId ->
-    %% pivot has already been considered, advance one of the preceding terms
+  %% pivot has already been considered, advance one of the preceding terms
     NewPostings = skip_to(Postings, CurrentDocId + 1),
     next(NewPostings, CurrentDocId, UpperBound);
 next(HeadPostingDocId, PivotDocId, PivotDocScore, Postings, _CurrentDocId, _UpperBound) 
@@ -166,5 +166,5 @@ find_pivot(_Posting, Postings, Threshold, NewTestBound) ->
 sort_by_head(Postings) ->
     lists:keysort(#postings.head_doc_id, Postings).
 
-
+              
     

@@ -22,7 +22,7 @@
 
 -module(search_query).
 
--export([query/1, profile/0]).
+-export([query/1, terms_query/1, profile/0]).
 
 -include("search.hrl").
 
@@ -30,7 +30,7 @@
 -define(TOTAL_DOC_COUNT, 132593). %% Full test sample set, number doesn't really matter as scoring is not compared with other queries in this demo.
 
 profile() ->
-    fprof:apply(search_query, query, [[<<"java">>, <<"ruby">>]]),
+    fprof:apply(search_query, terms_query, [[<<"the">>, <<"and">>]]),
     fprof:profile(),
     fprof:analyse({dest, "outfile.fprof"}).
 

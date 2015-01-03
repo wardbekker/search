@@ -27,8 +27,15 @@
 -export([init/1]).
 
 start_link() ->
-	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+    supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-	Procs = [],
-	{ok, {{one_for_one, 1, 5}, Procs}}.
+    SkipReporter= {skip_reporter,
+           {skip_reporter, start_link, []},
+           permanent, 5000, worker, [skip_reporter]},
+    GotoReporter= {goto_reporter,
+           {goto_reporter, start_link, []},
+           permanent, 5000, worker, [goto_reporter]},
+    
+    Procs = [SkipReporter, GotoReporter],
+    {ok, {{one_for_one, 10, 10}, Procs}}.

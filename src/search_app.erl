@@ -39,6 +39,7 @@ start() ->
     ok = application:start(cowlib),
     ok = application:start(cowboy),
     ok = application:start(mnesia),
+    application:start(search),
     start(undefined, undefined).
 
 start(_Type, _Args) ->
@@ -51,4 +52,4 @@ start(_Type, _Args) ->
     search_sup:start_link().
 
 stop(_State) ->
-	ok.
+    ok.

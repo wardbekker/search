@@ -21,7 +21,7 @@
 %% THE SOFTWARE.
 
 -define(P(Var), io:format("Debug var: ~p~n", [Var])).
--define(SKIP_INTERVAL, 1000).
+-define(SKIP_INTERVAL, 100).
 
 -record(heap, { heap :: list({integer(), integer()}), min_score :: integer()}).
 -record(skip_node, { start_doc_id :: integer(), docs :: list({integer(), integer()}) }).
